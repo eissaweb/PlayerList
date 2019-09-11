@@ -1904,6 +1904,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1921,6 +1935,7 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   created: function created() {
+    // if the application runs successfully then run fetchPlayers method
     this.fetchPlayers();
   },
   methods: {
@@ -1928,6 +1943,8 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       var q = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+      // also used for the search functionality if the q(query) is not empty
+      // make a get request using axios
       axios('api/players/' + q).then(function (res) {
         _this.players = res.data.data;
         _this.fetched = true;
@@ -1951,6 +1968,7 @@ __webpack_require__.r(__webpack_exports__);
     addPlayer: function addPlayer() {
       var _this3 = this;
 
+      // check if its a new Player or editing current one
       if (!this.editState) {
         // create new player
         axios.post('api/player', this.player).then(function (res) {
@@ -1971,6 +1989,7 @@ __webpack_require__.r(__webpack_exports__);
         age: this.player.age,
         player_id: this.player_id
       }).then(function (res) {
+        // reset the edit state
         _this3.editState = false;
         _this3.player_id = '';
 
@@ -1982,6 +2001,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     editPlayer: function editPlayer(player) {
+      // prepare for editing player
       this.editState = true;
       this.player_id = player.id;
       this.player.name = player.name;
@@ -1990,6 +2010,7 @@ __webpack_require__.r(__webpack_exports__);
     putMessage: function putMessage(msg) {
       var _this4 = this;
 
+      // set messages for 2 seconds and will be gone.
       this.status = true;
       this.msg = msg;
       setTimeout(function () {
@@ -37396,41 +37417,56 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "col-md-12" }, [
         _c("div", { staticClass: "row justify-content-between" }, [
-          _c("div", { staticClass: "col-md-4" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.q,
-                  expression: "q"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: {
-                type: "text",
-                placeholder: "Search for a Player by name or age"
-              },
-              domProps: { value: _vm.q },
-              on: {
-                input: [
-                  function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.q = $event.target.value
-                  },
-                  function($event) {
+          _c("div", { staticClass: "col-md-4 mb-2" }, [
+            _c(
+              "form",
+              {
+                on: {
+                  submit: function($event) {
+                    $event.preventDefault()
                     return _vm.fetchPlayers(_vm.q)
                   }
-                ]
-              }
-            })
+                }
+              },
+              [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.q,
+                      expression: "q"
+                    }
+                  ],
+                  staticClass: "form-control w-75 d-inline",
+                  attrs: {
+                    type: "text",
+                    placeholder: "Search for a Player by name or age"
+                  },
+                  domProps: { value: _vm.q },
+                  on: {
+                    input: [
+                      function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.q = $event.target.value
+                      },
+                      function($event) {
+                        return _vm.fetchPlayers(_vm.q)
+                      }
+                    ]
+                  }
+                }),
+                _vm._v(" "),
+                _vm._m(0)
+              ]
+            )
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "col-md-8" }, [
             _c("table", { staticClass: "table" }, [
-              _vm._m(0),
+              _vm._m(1),
               _vm._v(" "),
               _c(
                 "tbody",
@@ -37503,6 +37539,16 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      { staticClass: "btn btn-success", attrs: { type: "submit" } },
+      [_c("i", { staticClass: "fas fa-search" })]
+    )
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
