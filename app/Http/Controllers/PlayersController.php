@@ -14,10 +14,15 @@ class PlayersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($q = null)
     {
-        $players = Player::paginate(10);
-        
+        $players = Player::orderBy('created_at', 'desc');
+
+        if ($q) {
+            $players = $players->where('name', 'like', '%' . $q . '%')
+            ->orWhere('age', $q);    
+        }
+        $players = $players->paginate(10);
         return PlayerResource::collection($players);
     }
 
@@ -45,7 +50,7 @@ class PlayersController extends Controller
         $player->age = $request->age;
 
         if ($player->save()) {
-            return new PlayerResource($player);
+            //return new PlayerResource($player);
         }
     }
 
@@ -81,7 +86,7 @@ class PlayersController extends Controller
      */
     public function update(Request $request, $id = null)
     {
-        $player = Player::findOrFail($request->id);
+        $player = Player::findOrFail($request->player_id);
 
         $player->name = $request->name;
         $player->age = $request->age;

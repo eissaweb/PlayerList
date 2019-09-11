@@ -18,7 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 // index: list of the football players
-Route::get('players', 'PlayersController@index');
+Route::get('players/{q?}', 'PlayersController@index');
 // show one player
 Route::get('player/{id}', 'PlayersController@show');
 // store a new player
