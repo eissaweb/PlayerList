@@ -22,7 +22,10 @@ try {
 window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-
+axios.defaults.baseUrl = `${default_axios_url}/api/`;
+axios.defaults.params = {}
+axios.defaults.params['api_token'] = default_axios_token;
+axios.defaults.params['quiz_id'] = default_axios_quiz_id;
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting

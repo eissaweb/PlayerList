@@ -2,6 +2,9 @@
     <div class="">
         <h3 class="display-4 text-center">Football Players</h3>
         <hr />
+        <div class="alert alert-info" v-if="waiting">
+            <small>please Wait...</small>
+        </div>
         <div class="alert alert-info" v-if="status">{{ msg }}</div>
         <div class="row justify-content-between">
             <div class="col-md-6">
@@ -92,7 +95,8 @@
                 status: false,
                 msg: '',
                 q: '',
-                fetched: false
+                fetched: false,
+                waiting: false
             }
         },
        created() {
@@ -111,27 +115,32 @@
         },
         deletePlayer(player_id) {
             if (confirm('are you sure want to delete this player ?')) {
+                this.changeWait() 
                 axios.delete('api/player/' + player_id)
                 .then(res => {
                     this.putMessage('Player has been deleted.');
                     this.fetchPlayers();
+                    this.changeWait() 
                 }).catch (e => console.log(e));
             }
         },
         addPlayer() {
             // check if its a new Player or editing current one
             if (! this.editState) {
+                this.changeWait() 
                 // create new player
                 axios.post('api/player', this.player)
                 .then (res => {
                     console.log(res.data);
                     this.putMessage('New player added.');
                     this.fetchPlayers();
+                    this.changeWait() 
                 }).catch (e => console.log('eror'));
                 return;
             } 
 
             // update current one
+            this.changeWait(); 
             axios.put('api/player', {
                 name: this.player.name,
                 age: this.player.age,
@@ -143,6 +152,7 @@
                 this.player_id = ''
                 this.putMessage('Player has been updated.');
                 this.fetchPlayers()
+                this.changeWait() 
             }).catch(e => alert('Error while updating: ' + e));
 
         },
@@ -161,6 +171,10 @@
             setTimeout(() => {
                 this.status = false
             }, 2000)
+        },
+        changeWait() {
+            this.waiting = ! this.waiting
+            console.log(this.waiting)
         }
        }
     }
